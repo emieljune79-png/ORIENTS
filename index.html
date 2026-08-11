@@ -1,232 +1,518 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRADOC ACCESS</title>
 
-  <title>Training and Doctrine Command</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
       box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        linear-gradient(135deg, #061a33, #0b3d73, #06264a);
+      background: #0b0f14;
       color: white;
-      overflow: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(0, 140, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 80% 80%, rgba(0, 80, 180, 0.20), transparent 30%);
-      pointer-events: none;
-    }
-
-    .container {
-      position: relative;
-      width: 420px;
-      max-width: 90%;
-      padding: 45px 35px;
-      text-align: center;
-
-      background: rgba(5, 25, 50, 0.88);
-      border: 1px solid rgba(90, 180, 255, 0.35);
-      border-radius: 18px;
-
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.55),
-        0 0 30px rgba(0, 120, 255, 0.12);
-
-      backdrop-filter: blur(12px);
-    }
-
-    .icon {
-      width: 75px;
-      height: 75px;
-      margin: 0 auto 20px;
-
       display: flex;
-      align-items: center;
       justify-content: center;
-
-      border-radius: 50%;
-      background: linear-gradient(145deg, #0b5ca8, #082b52);
-
-      border: 2px solid rgba(130, 205, 255, 0.55);
-
-      font-size: 34px;
-
-      box-shadow:
-        0 0 25px rgba(0, 140, 255, 0.25);
+      align-items: center;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 25px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    .box {
+      width: 90%;
+      max-width: 500px;
+      background: #151b23;
+      padding: 30px;
+      border-radius: 15px;
+      border: 1px solid #303a48;
     }
 
-    .subtitle {
-      margin-top: 8px;
-      margin-bottom: 30px;
-
-      color: #9dccf5;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    .divider {
-      width: 70px;
-      height: 2px;
-      margin: 0 auto 28px;
-
-      background: #4db8ff;
-      box-shadow: 0 0 10px rgba(77, 184, 255, 0.6);
-    }
-
-    .instruction {
-      font-size: 14px;
-      color: #c5ddf2;
-      margin-bottom: 15px;
+    h1, h2 {
+      text-align: center;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-
-      background: rgba(0, 15, 32, 0.75);
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #394656;
+      background: #0d131a;
       color: white;
-
-      border: 1px solid #27689d;
-      border-radius: 9px;
-
-      outline: none;
-      text-align: center;
-      font-size: 15px;
-
-      transition: 0.25s;
-    }
-
-    input:focus {
-      border-color: #55baff;
-      box-shadow: 0 0 12px rgba(70, 180, 255, 0.25);
     }
 
     button {
       width: 100%;
-      margin-top: 15px;
-      padding: 14px;
-
+      padding: 13px;
+      margin-top: 10px;
       border: none;
-      border-radius: 9px;
-
-      background: linear-gradient(135deg, #147bd1, #07539a);
+      border-radius: 8px;
+      background: #2563eb;
       color: white;
-
-      font-size: 14px;
       font-weight: bold;
-      letter-spacing: 1.5px;
-
       cursor: pointer;
-
-      transition: 0.25s;
     }
 
     button:hover {
-      transform: translateY(-2px);
-
-      background: linear-gradient(135deg, #2196ed, #0866b7);
-
-      box-shadow:
-        0 8px 20px rgba(0, 120, 255, 0.3);
+      opacity: .85;
     }
 
-    #error {
+    .green {
+      background: #16a34a;
+    }
+
+    .gray {
+      background: #374151;
+    }
+
+    .hidden {
       display: none;
-      margin-top: 15px;
-      color: #ff7373;
-      font-size: 13px;
     }
 
-    .footer {
-      margin-top: 30px;
-      color: #7898b7;
-      font-size: 11px;
-      letter-spacing: 1px;
+    .card {
+      background: #1c2530;
+      padding: 15px;
+      margin-top: 12px;
+      border-radius: 10px;
+    }
+
+    .status {
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      background: #1c2530;
+      border-radius: 10px;
+    }
+
+    #message {
+      text-align: center;
+      color: #9ca3af;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="box">
 
-    <div class="icon">
-      🔐
-    </div>
+  <!-- LOGIN -->
+  <div id="login">
+    <h1>TRADOC ACCESS</h1>
+    <p id="message">Login to continue</p>
 
-    <h1>Training and Doctrine Command</h1>
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
 
-    <div class="subtitle">
-      Official Orientation Portal
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="instruction">
-      Enter the authorized password to continue.
-    </div>
-
-    <input
-      type="password"
-      id="password"
-      placeholder="Enter Password"
-      onkeydown="if(event.key === 'Enter') checkPassword()"
-    >
-
-    <button onclick="checkPassword()">
-      ACCESS ORIENTATION
-    </button>
-
-    <p id="error">
-      Incorrect password. Please try again.
-    </p>
-
-    <div class="footer">
-      TRAINING AND DOCTRINE COMMAND
-    </div>
-
+    <button onclick="loginUser()">LOGIN</button>
   </div>
 
-  <script>
-    const correctPassword = "ORIENT2026";
 
-    function checkPassword() {
-      const password = document.getElementById("password").value;
-      const error = document.getElementById("error");
+  <!-- PENDING -->
+  <div id="pending" class="hidden">
+    <h2>ACCESS REQUEST</h2>
 
-      if (password === correctPassword) {
-        window.location.href =
-          "https://canva.link/orientation-for-aji";
-      } else {
-        error.style.display = "block";
-      }
+    <div class="status">
+      ⏳ Your request is waiting for HEAD approval.
+    </div>
+
+    <button onclick="checkStatus()">CHECK STATUS</button>
+    <button class="gray" onclick="logout()">LOGOUT</button>
+  </div>
+
+
+  <!-- ADMIN -->
+  <div id="admin" class="hidden">
+    <h2>HEAD ADMIN</h2>
+
+    <p id="adminMessage">
+      Pending access requests:
+    </p>
+
+    <div id="requests"></div>
+
+    <button class="gray" onclick="loadRequests()">
+      REFRESH
+    </button>
+
+    <button class="gray" onclick="logout()">
+      LOGOUT
+    </button>
+  </div>
+
+
+  <!-- APPROVED -->
+  <div id="approved" class="hidden">
+    <h2>ACCESS APPROVED</h2>
+
+    <div class="status">
+      ✅ HEAD has approved your access.
+    </div>
+
+    <button class="green" onclick="openOrient()">
+      OPEN ORIENT
+    </button>
+
+    <button class="gray" onclick="logout()">
+      LOGOUT
+    </button>
+  </div>
+
+
+  <!-- ORIENTATION -->
+  <div id="orient" class="hidden">
+    <h2>TRADOC ORIENTATION</h2>
+
+    <div class="card">
+      <p>
+        Welcome to the TRADOC Orientation.
+      </p>
+
+      <p>
+        Please read and understand all instructions
+        before proceeding.
+      </p>
+
+      <p>
+        Follow the chain of command and perform your
+        assigned responsibilities properly.
+      </p>
+    </div>
+
+    <button class="gray" onclick="logout()">
+      LOGOUT
+    </button>
+  </div>
+
+</div>
+
+
+<script>
+
+  // SUPABASE
+  const SUPABASE_URL =
+    "https://zcubqqftpsanbgttxres.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_tebPFexgNwi_jti6pePl_A_fAFNJEpg";
+
+  const client =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+  // HEAD ACCOUNT
+  const ADMIN_EMAIL =
+    "emieljune79@gmail.com";
+
+
+  // PAGE SWITCHER
+  function show(id) {
+
+    document
+      .querySelectorAll(".box > div")
+      .forEach(x => x.classList.add("hidden"));
+
+    document
+      .getElementById(id)
+      .classList.remove("hidden");
+  }
+
+
+  // LOGIN
+  async function loginUser() {
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    if (!email || !password) {
+
+      document.getElementById("message").textContent =
+        "Please enter your email and password.";
+
+      return;
     }
-  </script>
+
+
+    const { data, error } =
+      await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+    if (error) {
+
+      document.getElementById("message").textContent =
+        error.message;
+
+      return;
+    }
+
+
+    if (
+      data.user.email.toLowerCase() ===
+      ADMIN_EMAIL.toLowerCase()
+    ) {
+
+      show("admin");
+
+      loadRequests();
+
+    } else {
+
+      checkStatus();
+
+    }
+
+  }
+
+
+  // CHECK USER STATUS
+  async function checkStatus() {
+
+    const {
+      data: { user }
+    } = await client.auth.getUser();
+
+
+    if (!user) {
+
+      show("login");
+
+      return;
+    }
+
+
+    const { data, error } =
+      await client
+        .from("access_requests")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.log(error);
+
+      show("pending");
+
+      return;
+    }
+
+
+    // NO REQUEST
+    if (!data) {
+
+      await client
+        .from("access_requests")
+        .insert({
+          user_id: user.id,
+          discord_name: user.email,
+          status: "pending"
+        });
+
+      show("pending");
+
+      return;
+    }
+
+
+    // APPROVED
+    if (data.status === "approved") {
+
+      show("approved");
+
+      return;
+    }
+
+
+    // PENDING
+    show("pending");
+
+  }
+
+
+  // LOAD ADMIN REQUESTS
+  async function loadRequests() {
+
+    const container =
+      document.getElementById("requests");
+
+    container.innerHTML =
+      "Loading...";
+
+
+    const { data, error } =
+      await client
+        .from("access_requests")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+
+    if (error) {
+
+      container.innerHTML =
+        "Unable to load requests.";
+
+      console.log(error);
+
+      return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    if (!data || data.length === 0) {
+
+      container.innerHTML =
+        "<div class='card'>No requests.</div>";
+
+      return;
+    }
+
+
+    data.forEach(request => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+
+      card.innerHTML = `
+        <strong>${request.discord_name}</strong>
+        <br>
+        Status: ${request.status}
+      `;
+
+
+      if (request.status === "pending") {
+
+        const button =
+          document.createElement("button");
+
+        button.className = "green";
+
+        button.textContent =
+          "APPROVE";
+
+
+        button.onclick =
+          () => approve(request.id);
+
+
+        card.appendChild(button);
+
+      }
+
+
+      container.appendChild(card);
+
+    });
+
+  }
+
+
+  // APPROVE
+  async function approve(id) {
+
+    const { error } =
+      await client
+        .from("access_requests")
+        .update({
+          status: "approved",
+          approved_at:
+            new Date().toISOString()
+        })
+        .eq("id", id);
+
+
+    if (error) {
+
+      alert(
+        "Approval failed: " +
+        error.message
+      );
+
+      return;
+    }
+
+
+    alert("Approved!");
+
+    loadRequests();
+
+  }
+
+
+  // OPEN ORIENTATION
+  function openOrient() {
+
+    show("orient");
+
+  }
+
+
+  // LOGOUT
+  async function logout() {
+
+    await client.auth.signOut();
+
+    show("login");
+
+  }
+
+
+  // START
+  (async function() {
+
+    const {
+      data: { session }
+    } = await client.auth.getSession();
+
+
+    if (!session) {
+
+      show("login");
+
+      return;
+    }
+
+
+    if (
+      session.user.email.toLowerCase() ===
+      ADMIN_EMAIL.toLowerCase()
+    ) {
+
+      show("admin");
+
+      loadRequests();
+
+    } else {
+
+      checkStatus();
+
+    }
+
+  })();
+
+</script>
 
 </body>
 </html>
+```
