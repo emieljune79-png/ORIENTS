@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Training and Doctrine Command</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(135deg, #061a33, #0b3d73, #06264a);
+      color: white;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 140, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0, 80, 180, 0.20), transparent 30%);
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      width: 420px;
+      max-width: 90%;
+      padding: 45px 35px;
+      text-align: center;
+
+      background: rgba(5, 25, 50, 0.88);
+      border: 1px solid rgba(90, 180, 255, 0.35);
+      border-radius: 18px;
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.55),
+        0 0 30px rgba(0, 120, 255, 0.12);
+
+      backdrop-filter: blur(12px);
+    }
+
+    .icon {
+      width: 75px;
+      height: 75px;
+      margin: 0 auto 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+      background: linear-gradient(145deg, #0b5ca8, #082b52);
+
+      border: 2px solid rgba(130, 205, 255, 0.55);
+
+      font-size: 34px;
+
+      box-shadow:
+        0 0 25px rgba(0, 140, 255, 0.25);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 30px;
+
+      color: #9dccf5;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      width: 70px;
+      height: 2px;
+      margin: 0 auto 28px;
+
+      background: #4db8ff;
+      box-shadow: 0 0 10px rgba(77, 184, 255, 0.6);
+    }
+
+    .instruction {
+      font-size: 14px;
+      color: #c5ddf2;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+
+      background: rgba(0, 15, 32, 0.75);
+      color: white;
+
+      border: 1px solid #27689d;
+      border-radius: 9px;
+
+      outline: none;
+      text-align: center;
+      font-size: 15px;
+
+      transition: 0.25s;
+    }
+
+    input:focus {
+      border-color: #55baff;
+      box-shadow: 0 0 12px rgba(70, 180, 255, 0.25);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 14px;
+
+      border: none;
+      border-radius: 9px;
+
+      background: linear-gradient(135deg, #147bd1, #07539a);
+      color: white;
+
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+
+      cursor: pointer;
+
+      transition: 0.25s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+
+      background: linear-gradient(135deg, #2196ed, #0866b7);
+
+      box-shadow:
+        0 8px 20px rgba(0, 120, 255, 0.3);
+    }
+
+    #error {
+      display: none;
+      margin-top: 15px;
+      color: #ff7373;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: #7898b7;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="icon">
+      🔐
+    </div>
+
+    <h1>Training and Doctrine Command</h1>
+
+    <div class="subtitle">
+      Official Orientation Portal
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="instruction">
+      Enter the authorized password to continue.
+    </div>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter Password"
+      onkeydown="if(event.key === 'Enter') checkPassword()"
+    >
+
+    <button onclick="checkPassword()">
+      ACCESS ORIENTATION
+    </button>
+
+    <p id="error">
+      Incorrect password. Please try again.
+    </p>
+
+    <div class="footer">
+      TRAINING AND DOCTRINE COMMAND
+    </div>
+
+  </div>
+
+  <script>
+    const correctPassword = "ORIENT2026";
+
+    function checkPassword() {
+      const password = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      if (password === correctPassword) {
+        window.location.href =
+          "https://canva.link/orientation-for-aji";
+      } else {
+        error.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
