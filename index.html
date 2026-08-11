@@ -1,518 +1,477 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TRADOC ACCESS</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Orientation Portal</title>
 
   <style>
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
-      background: #0b0f14;
-      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #0b0f0d;
+      color: white;
     }
 
-    .box {
-      width: 90%;
-      max-width: 500px;
-      background: #151b23;
-      padding: 30px;
-      border-radius: 15px;
-      border: 1px solid #303a48;
+    .container {
+      width: 100%;
+      max-width: 430px;
+      padding: 20px;
     }
 
-    h1, h2 {
+    .card {
+      background: #121815;
+      border: 1px solid #26332c;
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: #1c2a22;
+      border: 2px solid #3b6b50;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+    }
+
+    h1 {
       text-align: center;
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #8d9b93;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #2b3931;
+      background: #18201b;
+      color: #aab5ae;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tab.active {
+      background: #315c43;
+      color: white;
+      border-color: #47795b;
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #b8c2bc;
+      font-size: 13px;
     }
 
     input {
       width: 100%;
       padding: 13px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #394656;
-      background: #0d131a;
+      margin-bottom: 17px;
+      background: #0c110e;
+      border: 1px solid #2b3931;
+      border-radius: 9px;
       color: white;
+      outline: none;
+      font-size: 14px;
     }
 
-    button {
+    input:focus {
+      border-color: #4b805f;
+    }
+
+    .login-btn {
       width: 100%;
-      padding: 13px;
-      margin-top: 10px;
+      padding: 14px;
       border: none;
-      border-radius: 8px;
-      background: #2563eb;
+      border-radius: 9px;
+      background: #356447;
       color: white;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
     }
 
-    button:hover {
-      opacity: .85;
+    .login-btn:hover {
+      background: #417b56;
     }
 
-    .green {
-      background: #16a34a;
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
     }
 
-    .gray {
-      background: #374151;
+    .message.error {
+      display: block;
+      background: #351b1b;
+      color: #ff9b9b;
+      border: 1px solid #613333;
+    }
+
+    .message.success {
+      display: block;
+      background: #183522;
+      color: #9be0ae;
+      border: 1px solid #356c45;
+    }
+
+    .admin-note {
+      margin-top: 18px;
+      text-align: center;
+      color: #69756e;
+      font-size: 11px;
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
-    .card {
-      background: #1c2530;
-      padding: 15px;
-      margin-top: 12px;
-      border-radius: 10px;
-    }
-
-    .status {
+    .welcome {
       text-align: center;
-      margin: 20px 0;
-      padding: 15px;
-      background: #1c2530;
-      border-radius: 10px;
     }
 
-    #message {
-      text-align: center;
-      color: #9ca3af;
+    .welcome h2 {
+      margin-bottom: 12px;
+    }
+
+    .welcome p {
+      color: #9ca8a0;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .orientation-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #356447;
+      color: white;
+      text-decoration: none;
+      border-radius: 9px;
+      font-weight: bold;
+    }
+
+    .logout {
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: #9ca8a0;
+      border: 1px solid #2b3931;
+      border-radius: 9px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-<div class="box">
+  <div class="container">
 
-  <!-- LOGIN -->
-  <div id="login">
-    <h1>TRADOC ACCESS</h1>
-    <p id="message">Login to continue</p>
+    <div class="card" id="loginCard">
 
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+      <div class="logo">📋</div>
 
-    <button onclick="loginUser()">LOGIN</button>
-  </div>
+      <h1>Orientation Portal</h1>
+      <p class="subtitle">Please select your account type</p>
 
+      <div class="tabs">
+        <button class="tab active" id="userTab" onclick="showLogin('user')">
+          User Login
+        </button>
 
-  <!-- PENDING -->
-  <div id="pending" class="hidden">
-    <h2>ACCESS REQUEST</h2>
+        <button class="tab" id="adminTab" onclick="showLogin('admin')">
+          Admin Login
+        </button>
+      </div>
 
-    <div class="status">
-      ⏳ Your request is waiting for HEAD approval.
+      <!-- USER LOGIN -->
+
+      <form id="userForm" class="form active" onsubmit="userLogin(event)">
+
+        <label for="userEmail">Email</label>
+        <input
+          type="email"
+          id="userEmail"
+          placeholder="Enter your email"
+          required
+        >
+
+        <label for="userPassword">Password</label>
+        <input
+          type="password"
+          id="userPassword"
+          placeholder="Enter your password"
+          required
+        >
+
+        <button class="login-btn" type="submit">
+          Login
+        </button>
+
+      </form>
+
+      <!-- ADMIN LOGIN -->
+
+      <form id="adminForm" class="form" onsubmit="adminLogin(event)">
+
+        <label for="adminEmail">Admin Email</label>
+        <input
+          type="email"
+          id="adminEmail"
+          placeholder="Enter admin email"
+          required
+        >
+
+        <label for="adminPassword">Admin Password</label>
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="Enter admin password"
+          required
+        >
+
+        <button class="login-btn" type="submit">
+          Admin Login
+        </button>
+
+        <p class="admin-note">
+          Authorized administrators only.
+        </p>
+
+      </form>
+
+      <div id="message" class="message"></div>
+
     </div>
 
-    <button onclick="checkStatus()">CHECK STATUS</button>
-    <button class="gray" onclick="logout()">LOGOUT</button>
-  </div>
 
+    <!-- USER APPROVED PAGE -->
 
-  <!-- ADMIN -->
-  <div id="admin" class="hidden">
-    <h2>HEAD ADMIN</h2>
+    <div class="card hidden" id="userPanel">
 
-    <p id="adminMessage">
-      Pending access requests:
-    </p>
+      <div class="welcome">
 
-    <div id="requests"></div>
+        <div class="logo">✓</div>
 
-    <button class="gray" onclick="loadRequests()">
-      REFRESH
-    </button>
+        <h2>Access Approved</h2>
 
-    <button class="gray" onclick="logout()">
-      LOGOUT
-    </button>
-  </div>
+        <p>
+          Your account has been approved.
+          You may now access the orientation.
+        </p>
 
+        <!-- PALITAN MO ITO NG CANVA LINK MO -->
+        <a
+          href="YOUR_CANVA_LINK_HERE"
+          target="_blank"
+          class="orientation-btn"
+        >
+          Open Orientation
+        </a>
 
-  <!-- APPROVED -->
-  <div id="approved" class="hidden">
-    <h2>ACCESS APPROVED</h2>
+        <button class="logout" onclick="logout()">
+          Logout
+        </button>
 
-    <div class="status">
-      ✅ HEAD has approved your access.
+      </div>
+
     </div>
 
-    <button class="green" onclick="openOrient()">
-      OPEN ORIENT
-    </button>
 
-    <button class="gray" onclick="logout()">
-      LOGOUT
-    </button>
-  </div>
+    <!-- ADMIN PANEL -->
 
+    <div class="card hidden" id="adminPanel">
 
-  <!-- ORIENTATION -->
-  <div id="orient" class="hidden">
-    <h2>TRADOC ORIENTATION</h2>
+      <div class="welcome">
 
-    <div class="card">
-      <p>
-        Welcome to the TRADOC Orientation.
-      </p>
+        <div class="logo">🛡️</div>
 
-      <p>
-        Please read and understand all instructions
-        before proceeding.
-      </p>
+        <h2>Admin Panel</h2>
 
-      <p>
-        Follow the chain of command and perform your
-        assigned responsibilities properly.
-      </p>
+        <p>
+          You are logged in as an administrator.
+        </p>
+
+        <button class="orientation-btn" onclick="showMessage('Approval system will be connected next.')">
+          Approval Management
+        </button>
+
+        <button class="logout" onclick="logout()">
+          Logout
+        </button>
+
+      </div>
+
     </div>
 
-    <button class="gray" onclick="logout()">
-      LOGOUT
-    </button>
   </div>
 
-</div>
 
+  <script>
 
-<script>
+    function showLogin(type) {
 
-  // SUPABASE
-  const SUPABASE_URL =
-    "https://zcubqqftpsanbgttxres.supabase.co";
+      const userForm = document.getElementById("userForm");
+      const adminForm = document.getElementById("adminForm");
 
-  const SUPABASE_KEY =
-    "sb_publishable_tebPFexgNwi_jti6pePl_A_fAFNJEpg";
+      const userTab = document.getElementById("userTab");
+      const adminTab = document.getElementById("adminTab");
 
-  const client =
-    supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+      clearMessage();
 
+      if (type === "user") {
 
-  // HEAD ACCOUNT
-  const ADMIN_EMAIL =
-    "emieljune79@gmail.com";
+        userForm.classList.add("active");
+        adminForm.classList.remove("active");
 
+        userTab.classList.add("active");
+        adminTab.classList.remove("active");
 
-  // PAGE SWITCHER
-  function show(id) {
+      } else {
 
-    document
-      .querySelectorAll(".box > div")
-      .forEach(x => x.classList.add("hidden"));
+        adminForm.classList.add("active");
+        userForm.classList.remove("active");
 
-    document
-      .getElementById(id)
-      .classList.remove("hidden");
-  }
-
-
-  // LOGIN
-  async function loginUser() {
-
-    const email =
-      document.getElementById("email").value.trim();
-
-    const password =
-      document.getElementById("password").value;
-
-    if (!email || !password) {
-
-      document.getElementById("message").textContent =
-        "Please enter your email and password.";
-
-      return;
-    }
-
-
-    const { data, error } =
-      await client.auth.signInWithPassword({
-        email,
-        password
-      });
-
-
-    if (error) {
-
-      document.getElementById("message").textContent =
-        error.message;
-
-      return;
-    }
-
-
-    if (
-      data.user.email.toLowerCase() ===
-      ADMIN_EMAIL.toLowerCase()
-    ) {
-
-      show("admin");
-
-      loadRequests();
-
-    } else {
-
-      checkStatus();
-
-    }
-
-  }
-
-
-  // CHECK USER STATUS
-  async function checkStatus() {
-
-    const {
-      data: { user }
-    } = await client.auth.getUser();
-
-
-    if (!user) {
-
-      show("login");
-
-      return;
-    }
-
-
-    const { data, error } =
-      await client
-        .from("access_requests")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-
-    if (error) {
-
-      console.log(error);
-
-      show("pending");
-
-      return;
-    }
-
-
-    // NO REQUEST
-    if (!data) {
-
-      await client
-        .from("access_requests")
-        .insert({
-          user_id: user.id,
-          discord_name: user.email,
-          status: "pending"
-        });
-
-      show("pending");
-
-      return;
-    }
-
-
-    // APPROVED
-    if (data.status === "approved") {
-
-      show("approved");
-
-      return;
-    }
-
-
-    // PENDING
-    show("pending");
-
-  }
-
-
-  // LOAD ADMIN REQUESTS
-  async function loadRequests() {
-
-    const container =
-      document.getElementById("requests");
-
-    container.innerHTML =
-      "Loading...";
-
-
-    const { data, error } =
-      await client
-        .from("access_requests")
-        .select("*")
-        .order("created_at", {
-          ascending: false
-        });
-
-
-    if (error) {
-
-      container.innerHTML =
-        "Unable to load requests.";
-
-      console.log(error);
-
-      return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    if (!data || data.length === 0) {
-
-      container.innerHTML =
-        "<div class='card'>No requests.</div>";
-
-      return;
-    }
-
-
-    data.forEach(request => {
-
-      const card =
-        document.createElement("div");
-
-      card.className = "card";
-
-
-      card.innerHTML = `
-        <strong>${request.discord_name}</strong>
-        <br>
-        Status: ${request.status}
-      `;
-
-
-      if (request.status === "pending") {
-
-        const button =
-          document.createElement("button");
-
-        button.className = "green";
-
-        button.textContent =
-          "APPROVE";
-
-
-        button.onclick =
-          () => approve(request.id);
-
-
-        card.appendChild(button);
+        adminTab.classList.add("active");
+        userTab.classList.remove("active");
 
       }
+    }
 
 
-      container.appendChild(card);
+    function userLogin(event) {
 
-    });
+      event.preventDefault();
 
-  }
+      /*
+        TEMPORARY ONLY.
 
+        Later we will replace this with real authentication
+        and an approval-status check.
+      */
 
-  // APPROVE
-  async function approve(id) {
+      const email = document.getElementById("userEmail").value;
+      const password = document.getElementById("userPassword").value;
 
-    const { error } =
-      await client
-        .from("access_requests")
-        .update({
-          status: "approved",
-          approved_at:
-            new Date().toISOString()
-        })
-        .eq("id", id);
+      if (!email || !password) {
+        showMessage("Please enter your email and password.", "error");
+        return;
+      }
 
-
-    if (error) {
-
-      alert(
-        "Approval failed: " +
-        error.message
+      showMessage(
+        "Login system is ready. Authentication will be connected next.",
+        "success"
       );
-
-      return;
     }
 
 
-    alert("Approved!");
+    function adminLogin(event) {
 
-    loadRequests();
+      event.preventDefault();
 
-  }
+      /*
+        DO NOT PUT REAL ADMIN PASSWORDS HERE.
 
+        This will later be connected to secure authentication.
+      */
 
-  // OPEN ORIENTATION
-  function openOrient() {
+      const email = document.getElementById("adminEmail").value;
+      const password = document.getElementById("adminPassword").value;
 
-    show("orient");
+      if (!email || !password) {
+        showMessage("Please enter your admin credentials.", "error");
+        return;
+      }
 
-  }
-
-
-  // LOGOUT
-  async function logout() {
-
-    await client.auth.signOut();
-
-    show("login");
-
-  }
-
-
-  // START
-  (async function() {
-
-    const {
-      data: { session }
-    } = await client.auth.getSession();
-
-
-    if (!session) {
-
-      show("login");
-
-      return;
+      showMessage(
+        "Admin authentication will be connected next.",
+        "success"
+      );
     }
 
 
-    if (
-      session.user.email.toLowerCase() ===
-      ADMIN_EMAIL.toLowerCase()
-    ) {
+    function showMessage(text, type = "success") {
 
-      show("admin");
+      const message = document.getElementById("message");
 
-      loadRequests();
-
-    } else {
-
-      checkStatus();
+      message.textContent = text;
+      message.className = "message " + type;
 
     }
 
-  })();
 
-</script>
+    function clearMessage() {
+
+      const message = document.getElementById("message");
+
+      message.textContent = "";
+      message.className = "message";
+
+    }
+
+
+    function logout() {
+
+      document.getElementById("loginCard").classList.remove("hidden");
+      document.getElementById("userPanel").classList.add("hidden");
+      document.getElementById("adminPanel").classList.add("hidden");
+
+      document.getElementById("userForm").reset();
+      document.getElementById("adminForm").reset();
+
+      showLogin("user");
+
+    }
+
+
+    function showMessage(text) {
+
+      alert(text);
+
+    }
+
+  </script>
 
 </body>
 </html>
-```
